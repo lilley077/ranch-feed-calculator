@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Ranch Mate Feed Calculator</title>
+<style>
+body{font-family:Arial;margin:40px;background:#f4f6f7}
+input{margin:5px;padding:8px}
+button{padding:10px;margin-top:10px;background:#2e7d32;color:white;border:none}
+</style>
+</head>
+
+<body>
+
+<h1>Ranch Mate Feed Calculator</h1>
+
+<h2>Daily Markets</h2>
+
+Live Cattle ($/lb)
+<input id="live" value="1.85"><br>
+
+Feeder Cattle ($/lb)
+<input id="feeder" value="2.40"><br>
+
+Corn ($/bushel)
+<input id="corn" value="4.60"><br>
+
+Hay ($/ton)
+<input id="hay" value="180"><br>
+
+<hr>
+
+<h2>Feed Calculator</h2>
+
+Number of Cattle
+<input id="cattle"><br>
+
+Average Weight (lb)
+<input id="weight"><br>
+
+Feed Intake %
+<input id="intake" value="2.5"><br>
+
+Feed Price per Ton
+<input id="price"><br>
+
+<button onclick="calculate()">Calculate Feed</button>
+
+<h3 id="result"></h3>
+
+<hr>
+
+<h2>Profit Calculator</h2>
+
+Purchase Weight (lb)
+<input id="buyWeight"><br>
+
+Purchase Price ($/lb)
+<input id="buyPrice"><br>
+
+Finished Weight (lb)
+<input id="sellWeight"><br>
+
+Sale Price ($/lb)
+<input id="sellPrice"><br>
+
+Feed Cost per Day ($)
+<input id="feedDay"><br>
+
+Days on Feed
+<input id="days"><br>
+
+<button onclick="profit()">Calculate Profit</button>
+
+<h3 id="profitResult"></h3>
+
+<script>
+
+function calculate(){
+
+let cattle = document.getElementById("cattle").value
+let weight = document.getElementById("weight").value
+let intake = document.getElementById("intake").value/100
+let price = document.getElementById("price").value
+
+let feedPerHead = weight*intake
+let totalFeed = feedPerHead*cattle
+
+let pricePerLb = price/2000
+let dailyCost = totalFeed*pricePerLb
+let monthlyCost = dailyCost*30
+
+document.getElementById("result").innerHTML =
+"Feed per head: "+feedPerHead.toFixed(1)+" lb/day <br>"+
+"Total feed: "+totalFeed.toFixed(0)+" lb/day <br>"+
+"Daily cost: $"+dailyCost.toFixed(2)+"<br>"+
+"Monthly cost: $"+monthlyCost.toFixed(2)
+
+}
+
+function profit(){
+
+let buyWeight = document.getElementById("buyWeight").value
+let buyPrice = document.getElementById("buyPrice").value
+let sellWeight = document.getElementById("sellWeight").value
+let sellPrice = document.getElementById("sellPrice").value
+let feedDay = document.getElementById("feedDay").value
+let days = document.getElementById("days").value
+
+let purchaseCost = buyWeight*buyPrice
+let feedCost = feedDay*days
+let totalCost = purchaseCost+feedCost
+let saleValue = sellWeight*sellPrice
+let profit = saleValue-totalCost
+
+document.getElementById("profitResult").innerHTML =
+"Purchase Cost: $"+purchaseCost.toFixed(2)+"<br>"+
+"Feed Cost: $"+feedCost.toFixed(2)+"<br>"+
+"Total Cost: $"+totalCost.toFixed(2)+"<br>"+
+"Sale Value: $"+saleValue.toFixed(2)+"<br>"+
+"Profit per Head: $"+profit.toFixed(2)
+
+}
+
+</script>
+
+</body>
+</html>
