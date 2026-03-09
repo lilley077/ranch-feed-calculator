@@ -3,412 +3,1009 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ranch Mate Feed Calculator</title>
+  <title>Ranch Mate Pro</title>
+  <meta name="description" content="Professional cattle feed, profit, break-even, and market calculator for ranchers and feedlot producers." />
   <style>
-    * {
-      box-sizing: border-box;
+    :root{
+      --bg:#f4f1e8;
+      --card:#ffffff;
+      --card-alt:#f9f6ef;
+      --green:#2f5d34;
+      --green-dark:#214325;
+      --green-soft:#4c7a44;
+      --text:#1e241f;
+      --muted:#677064;
+      --border:#e5dece;
+      --shadow:0 10px 24px rgba(0,0,0,.08);
+      --radius:18px;
+      --danger:#a63a3a;
+      --gold:#b98a2d;
     }
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f3f1ea;
-      color: #1f2a1f;
+    *{box-sizing:border-box}
+
+    html{scroll-behavior:smooth}
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#f4f1e8 0%, #efe9dc 100%);
+      color:var(--text);
     }
 
-    .container {
-      max-width: 950px;
-      margin: 0 auto;
-      padding: 16px;
+    a{color:inherit}
+
+    .shell{
+      max-width:1150px;
+      margin:0 auto;
+      padding:18px;
     }
 
-    .hero {
-      background: linear-gradient(135deg, #2f5d34, #4d7a42);
-      color: white;
-      padding: 28px 20px;
-      border-radius: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:14px;
+      margin-bottom:18px;
+      flex-wrap:wrap;
     }
 
-    .hero h1 {
-      margin: 0 0 8px 0;
-      font-size: 30px;
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:800;
+      color:var(--green);
+      letter-spacing:.2px;
     }
 
-    .hero p {
-      margin: 0;
-      line-height: 1.5;
-      opacity: 0.95;
+    .brand-badge{
+      width:44px;
+      height:44px;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--green),var(--green-soft));
+      color:#fff;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      box-shadow:var(--shadow);
     }
 
-    .card {
-      background: white;
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-      border: 1px solid #e7e0d3;
+    .nav{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
     }
 
-    .card h2 {
-      margin-top: 0;
-      color: #2f5d34;
-      font-size: 24px;
+    .nav a{
+      text-decoration:none;
+      background:rgba(255,255,255,.75);
+      border:1px solid var(--border);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:14px;
+      color:var(--muted);
+      font-weight:700;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+    .hero{
+      background:
+        linear-gradient(135deg, rgba(47,93,52,.96), rgba(76,122,68,.92)),
+        linear-gradient(180deg,#3b6d3f,#2f5d34);
+      color:#fff;
+      padding:28px;
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+      position:relative;
+      overflow:hidden;
     }
 
-    label {
-      display: block;
-      font-weight: 700;
-      margin-bottom: 6px;
-      font-size: 14px;
+    .hero::after{
+      content:"";
+      position:absolute;
+      right:-60px;
+      top:-60px;
+      width:220px;
+      height:220px;
+      background:rgba(255,255,255,.08);
+      border-radius:50%;
     }
 
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 12px;
-      border: 1px solid #cfc7b7;
-      background: #fcfbf8;
-      font-size: 16px;
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1.4fr .9fr;
+      gap:20px;
+      position:relative;
+      z-index:1;
     }
 
-    input:focus {
-      outline: none;
-      border-color: #4d7a42;
-      box-shadow: 0 0 0 3px rgba(77,122,66,0.15);
+    .hero h1{
+      margin:0 0 10px;
+      font-size:34px;
+      line-height:1.05;
     }
 
-    button, .subscribe-btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: 12px;
-      background: #2f5d34;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      margin-top: 14px;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
+    .hero p{
+      margin:0;
+      line-height:1.65;
+      max-width:700px;
+      opacity:.96;
     }
 
-    button:hover, .subscribe-btn:hover {
-      background: #24482a;
+    .hero-side{
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:18px;
+      padding:18px;
+      backdrop-filter: blur(4px);
     }
 
-    .market-boxes {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
-      margin-top: 14px;
+    .hero-side h3{
+      margin:0 0 10px;
+      font-size:16px;
     }
 
-    .market-box {
-      background: #f8f5ee;
-      border: 1px solid #e7e0d3;
-      border-radius: 14px;
-      padding: 14px;
-      text-align: center;
+    .hero-points{
+      margin:0;
+      padding-left:18px;
+      line-height:1.7;
+      font-size:14px;
     }
 
-    .market-label {
-      font-size: 13px;
-      color: #5d685d;
-      font-weight: 700;
-      margin-bottom: 6px;
+    .grid-2{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      margin-bottom:18px;
     }
 
-    .market-value {
-      font-size: 22px;
-      font-weight: 800;
-      color: #2f5d34;
+    .grid-3{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:18px;
+      margin-bottom:18px;
     }
 
-    .result {
-      margin-top: 14px;
-      background: #f6faf4;
-      border: 1px solid #d7e6d2;
-      border-radius: 12px;
-      padding: 14px;
-      line-height: 1.7;
-      min-height: 60px;
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:var(--shadow);
     }
 
-    .sub-card {
-      background: linear-gradient(135deg, #1f2a1f, #2f5d34);
-      color: white;
+    .card.alt{
+      background:var(--card-alt);
     }
 
-    .sub-card h2 {
-      color: white;
+    .card h2{
+      margin:0 0 14px;
+      color:var(--green);
+      font-size:24px;
+      line-height:1.1;
     }
 
-    .price {
-      font-size: 40px;
-      font-weight: 800;
-      margin: 10px 0 4px;
+    .section-kicker{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      color:var(--gold);
+      margin-bottom:8px;
     }
 
-    .small {
-      font-size: 14px;
-      line-height: 1.5;
-      opacity: 0.95;
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
     }
 
-    ul {
-      padding-left: 20px;
-      line-height: 1.8;
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
     }
 
-    .footer-note {
-      text-align: center;
-      font-size: 13px;
-      color: #6d746a;
-      margin-top: 6px;
+    .field.full{
+      grid-column:1 / -1;
     }
 
-    @media (max-width: 700px) {
-      .grid,
-      .market-boxes {
-        grid-template-columns: 1fr;
-      }
+    label{
+      font-size:13px;
+      font-weight:800;
+      color:#445044;
+      letter-spacing:.02em;
+    }
 
-      .hero h1 {
-        font-size: 26px;
-      }
+    input, select{
+      width:100%;
+      padding:13px 14px;
+      border-radius:12px;
+      border:1px solid #d2cab8;
+      background:#fffdfa;
+      font-size:16px;
+      color:var(--text);
+      transition:.18s ease;
+    }
+
+    input:focus, select:focus{
+      outline:none;
+      border-color:var(--green-soft);
+      box-shadow:0 0 0 4px rgba(76,122,68,.14);
+    }
+
+    .btn-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:14px;
+    }
+
+    button, .button-link{
+      border:none;
+      border-radius:12px;
+      padding:13px 16px;
+      font-size:15px;
+      font-weight:800;
+      cursor:pointer;
+      transition:.18s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      min-height:46px;
+    }
+
+    .btn-primary{
+      background:var(--green);
+      color:#fff;
+      flex:1;
+    }
+
+    .btn-primary:hover{background:var(--green-dark)}
+
+    .btn-secondary{
+      background:#ede7d9;
+      color:var(--text);
+      border:1px solid var(--border);
+      flex:1;
+    }
+
+    .btn-secondary:hover{background:#e7dfcf}
+
+    .btn-danger{
+      background:#f8ecec;
+      color:var(--danger);
+      border:1px solid #eccfcf;
+      flex:1;
+    }
+
+    .btn-danger:hover{background:#f3e2e2}
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .stat{
+      background:#faf7f1;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+      text-align:center;
+    }
+
+    .stat .label{
+      font-size:12px;
+      color:var(--muted);
+      font-weight:800;
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:.06em;
+    }
+
+    .stat .value{
+      font-size:24px;
+      font-weight:900;
+      color:var(--green);
+    }
+
+    .muted{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .result{
+      margin-top:14px;
+      background:#f7fbf5;
+      border:1px solid #d8e7d4;
+      border-radius:14px;
+      padding:14px 16px;
+      line-height:1.8;
+      min-height:68px;
+      font-size:15px;
+    }
+
+    .result strong{
+      color:var(--green);
+    }
+
+    .subscription{
+      background:linear-gradient(135deg,#1e2b1f,#2f5d34);
+      color:#fff;
+      border:none;
+    }
+
+    .subscription h2,
+    .subscription .section-kicker{
+      color:#fff;
+    }
+
+    .price{
+      font-size:44px;
+      font-weight:900;
+      margin:6px 0 0;
+    }
+
+    .price small{
+      font-size:18px;
+      font-weight:700;
+      opacity:.9;
+    }
+
+    .sub-list{
+      margin:14px 0 0;
+      padding-left:18px;
+      line-height:1.8;
+      opacity:.96;
+    }
+
+    .sub-note{
+      font-size:13px;
+      opacity:.85;
+      margin-top:12px;
+    }
+
+    .save-list{
+      display:grid;
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .save-item{
+      background:#faf7f1;
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:14px;
+    }
+
+    .save-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:8px;
+    }
+
+    .save-title{
+      font-weight:900;
+      color:var(--green);
+    }
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:800;
+      background:#e9f1e6;
+      color:var(--green);
+    }
+
+    .small-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+
+    .mini-btn{
+      padding:9px 12px;
+      border-radius:10px;
+      font-size:13px;
+      font-weight:800;
+      border:1px solid var(--border);
+      background:#fff;
+      cursor:pointer;
+    }
+
+    .mini-btn:hover{
+      background:#f3efe7;
+    }
+
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+      padding:20px 0 8px;
+    }
+
+    @media (max-width:900px){
+      .hero-grid, .grid-2, .grid-3{grid-template-columns:1fr}
+    }
+
+    @media (max-width:720px){
+      .form-grid, .stats{grid-template-columns:1fr}
+      .hero h1{font-size:28px}
+      .shell{padding:14px}
+      .card{padding:16px}
     }
   </style>
 </head>
 <body>
-  <div class="container">
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="brand-badge">RM</div>
+        <div>
+          <div style="font-size:18px;">Ranch Mate Pro</div>
+          <div style="font-size:12px;color:var(--muted);font-weight:700;">Cattle tools built for producers</div>
+        </div>
+      </div>
 
-    <div class="hero">
-      <h1>Ranch Mate Feed Calculator</h1>
-      <p>Built for cattle producers to track feed costs, project profit, and know break-even numbers fast.</p>
+      <div class="nav">
+        <a href="#markets">Markets</a>
+        <a href="#feed">Feed</a>
+        <a href="#profit">Profit</a>
+        <a href="#breakeven">Break-Even</a>
+        <a href="#saved">Saved</a>
+        <a href="#subscribe">Pro</a>
+      </div>
     </div>
 
-    <div class="card">
-      <h2>Daily Markets</h2>
-      <div class="grid">
+    <section class="hero">
+      <div class="hero-grid">
         <div>
+          <h1>Professional cattle feed, profit, and break-even tools.</h1>
+          <p>
+            Ranch Mate Pro helps you estimate feed usage, project profit per head, calculate break-even sale price,
+            track market inputs, and save scenarios right from your phone.
+          </p>
+        </div>
+        <div class="hero-side">
+          <h3>What this version includes</h3>
+          <ul class="hero-points">
+            <li>Daily market dashboard</li>
+            <li>Feed calculator</li>
+            <li>Profit per head</li>
+            <li>Break-even price</li>
+            <li>Cost of gain</li>
+            <li>Saved scenarios on device</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="markets" class="card">
+      <div class="section-kicker">Markets</div>
+      <h2>Daily Market Dashboard</h2>
+      <div class="form-grid">
+        <div class="field">
           <label for="live">Live Cattle ($/lb)</label>
-          <input id="live" value="1.85" type="number" step="0.01" oninput="updateMarkets()">
+          <input id="live" type="number" step="0.01" value="1.85" oninput="updateMarkets()" />
         </div>
-        <div>
+        <div class="field">
           <label for="feeder">Feeder Cattle ($/lb)</label>
-          <input id="feeder" value="2.40" type="number" step="0.01" oninput="updateMarkets()">
+          <input id="feeder" type="number" step="0.01" value="2.40" oninput="updateMarkets()" />
         </div>
-        <div>
+        <div class="field">
           <label for="corn">Corn ($/bushel)</label>
-          <input id="corn" value="4.60" type="number" step="0.01" oninput="updateMarkets()">
+          <input id="corn" type="number" step="0.01" value="4.60" oninput="updateMarkets()" />
         </div>
-        <div>
+        <div class="field">
           <label for="hay">Hay ($/ton)</label>
-          <input id="hay" value="180" type="number" step="0.01" oninput="updateMarkets()">
+          <input id="hay" type="number" step="0.01" value="180" oninput="updateMarkets()" />
         </div>
       </div>
 
-      <div class="market-boxes">
-        <div class="market-box">
-          <div class="market-label">Live</div>
-          <div class="market-value" id="liveDisplay">$1.85</div>
+      <div class="stats">
+        <div class="stat">
+          <div class="label">Live</div>
+          <div class="value" id="liveDisplay">$1.85</div>
         </div>
-        <div class="market-box">
-          <div class="market-label">Feeder</div>
-          <div class="market-value" id="feederDisplay">$2.40</div>
+        <div class="stat">
+          <div class="label">Feeder</div>
+          <div class="value" id="feederDisplay">$2.40</div>
         </div>
-        <div class="market-box">
-          <div class="market-label">Corn</div>
-          <div class="market-value" id="cornDisplay">$4.60</div>
+        <div class="stat">
+          <div class="label">Corn</div>
+          <div class="value" id="cornDisplay">$4.60</div>
         </div>
-        <div class="market-box">
-          <div class="market-label">Hay</div>
-          <div class="market-value" id="hayDisplay">$180</div>
+        <div class="stat">
+          <div class="label">Hay</div>
+          <div class="value" id="hayDisplay">$180</div>
         </div>
       </div>
+
+      <div class="result" id="marketResult">
+        Update the market values above to match your current numbers.
+      </div>
+    </section>
+
+    <div class="grid-2">
+      <section id="feed" class="card alt">
+        <div class="section-kicker">Feed Tools</div>
+        <h2>Feed Calculator</h2>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="scenarioName">Scenario Name</label>
+            <input id="scenarioName" type="text" placeholder="Spring Steer Pen" />
+          </div>
+          <div class="field">
+            <label for="cattle">Number of Cattle</label>
+            <input id="cattle" type="number" placeholder="40" />
+          </div>
+          <div class="field">
+            <label for="weight">Average Weight (lb)</label>
+            <input id="weight" type="number" placeholder="800" />
+          </div>
+          <div class="field">
+            <label for="intake">Feed Intake %</label>
+            <input id="intake" type="number" step="0.1" value="2.5" />
+          </div>
+          <div class="field">
+            <label for="price">Feed Price per Ton ($)</label>
+            <input id="price" type="number" step="0.01" placeholder="220" />
+          </div>
+          <div class="field">
+            <label for="daysFeed">Days on Feed</label>
+            <input id="daysFeed" type="number" placeholder="180" />
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="calculateFeed()">Calculate Feed</button>
+          <button class="btn-secondary" onclick="saveScenario()">Save Scenario</button>
+        </div>
+
+        <div class="result" id="feedResult">
+          Enter your numbers and tap <strong>Calculate Feed</strong>.
+        </div>
+      </section>
+
+      <section id="profit" class="card">
+        <div class="section-kicker">Profit Tools</div>
+        <h2>Profit Calculator</h2>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="buyWeight">Purchase Weight (lb)</label>
+            <input id="buyWeight" type="number" placeholder="750" />
+          </div>
+          <div class="field">
+            <label for="buyPrice">Purchase Price ($/lb)</label>
+            <input id="buyPrice" type="number" step="0.01" placeholder="2.40" />
+          </div>
+          <div class="field">
+            <label for="sellWeight">Finished Weight (lb)</label>
+            <input id="sellWeight" type="number" placeholder="1350" />
+          </div>
+          <div class="field">
+            <label for="sellPrice">Sale Price ($/lb)</label>
+            <input id="sellPrice" type="number" step="0.01" placeholder="1.85" />
+          </div>
+          <div class="field">
+            <label for="feedDay">Feed Cost per Day ($)</label>
+            <input id="feedDay" type="number" step="0.01" placeholder="3.00" />
+          </div>
+          <div class="field">
+            <label for="days">Days on Feed</label>
+            <input id="days" type="number" placeholder="180" />
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="calculateProfit()">Calculate Profit</button>
+          <button class="btn-secondary" onclick="fillBreakEvenFromProfit()">Use Total Cost in Break-Even</button>
+        </div>
+
+        <div class="result" id="profitResult">
+          Enter your numbers and tap <strong>Calculate Profit</strong>.
+        </div>
+      </section>
     </div>
 
-    <div class="card">
-      <h2>Feed Calculator</h2>
-      <div class="grid">
-        <div>
-          <label for="cattle">Number of Cattle</label>
-          <input id="cattle" type="number" placeholder="40">
-        </div>
-        <div>
-          <label for="weight">Average Weight (lb)</label>
-          <input id="weight" type="number" placeholder="800">
-        </div>
-        <div>
-          <label for="intake">Feed Intake %</label>
-          <input id="intake" value="2.5" type="number" step="0.1">
-        </div>
-        <div>
-          <label for="price">Feed Price per Ton ($)</label>
-          <input id="price" type="number" placeholder="220">
-        </div>
-      </div>
+    <div class="grid-2">
+      <section id="breakeven" class="card">
+        <div class="section-kicker">Price Tools</div>
+        <h2>Break-Even Calculator</h2>
 
-      <button onclick="calculate()">Calculate Feed</button>
-      <div class="result" id="result">Enter your numbers and tap Calculate Feed.</div>
+        <div class="form-grid">
+          <div class="field">
+            <label for="finishWeight">Finished Weight (lb)</label>
+            <input id="finishWeight" type="number" placeholder="1350" />
+          </div>
+          <div class="field">
+            <label for="totalCost">Total Cost per Head ($)</label>
+            <input id="totalCost" type="number" step="0.01" placeholder="2340" />
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="calculateBreakEven()">Calculate Break-Even</button>
+        </div>
+
+        <div class="result" id="breakEvenResult">
+          Enter finished weight and total cost to see your break-even sale price.
+        </div>
+      </section>
+
+      <section class="card alt">
+        <div class="section-kicker">Efficiency Tools</div>
+        <h2>Cost of Gain</h2>
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="startingWeight">Starting Weight (lb)</label>
+            <input id="startingWeight" type="number" placeholder="750" />
+          </div>
+          <div class="field">
+            <label for="endingWeight">Ending Weight (lb)</label>
+            <input id="endingWeight" type="number" placeholder="1350" />
+          </div>
+          <div class="field">
+            <label for="totalFeedCost">Total Feed Cost ($)</label>
+            <input id="totalFeedCost" type="number" step="0.01" placeholder="540" />
+          </div>
+          <div class="field">
+            <label for="otherCosts">Other Costs ($)</label>
+            <input id="otherCosts" type="number" step="0.01" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="calculateCostOfGain()">Calculate Cost of Gain</button>
+        </div>
+
+        <div class="result" id="costGainResult">
+          Enter values to calculate cost per pound of gain.
+        </div>
+      </section>
     </div>
 
-    <div class="card">
-      <h2>Profit Calculator</h2>
-      <div class="grid">
-        <div>
-          <label for="buyWeight">Purchase Weight (lb)</label>
-          <input id="buyWeight" type="number" placeholder="750">
-        </div>
-        <div>
-          <label for="buyPrice">Purchase Price ($/lb)</label>
-          <input id="buyPrice" type="number" step="0.01" placeholder="2.40">
-        </div>
-        <div>
-          <label for="sellWeight">Finished Weight (lb)</label>
-          <input id="sellWeight" type="number" placeholder="1350">
-        </div>
-        <div>
-          <label for="sellPrice">Sale Price ($/lb)</label>
-          <input id="sellPrice" type="number" step="0.01" placeholder="1.85">
-        </div>
-        <div>
-          <label for="feedDay">Feed Cost per Day ($)</label>
-          <input id="feedDay" type="number" step="0.01" placeholder="3.00">
-        </div>
-        <div>
-          <label for="days">Days on Feed</label>
-          <input id="days" type="number" placeholder="180">
-        </div>
+    <section id="saved" class="card">
+      <div class="section-kicker">Saved Work</div>
+      <h2>Saved Scenarios</h2>
+      <p class="muted">
+        Saved scenarios stay on this device in the browser. This is useful for comparing feeding plans without retyping everything.
+      </p>
+
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="exportScenarios()">Export Saved Scenarios</button>
+        <button class="btn-danger" onclick="clearScenarios()">Clear All Saved Scenarios</button>
       </div>
 
-      <button onclick="profitCalc()">Calculate Profit</button>
-      <div class="result" id="profitResult">Enter your numbers and tap Calculate Profit.</div>
-    </div>
-
-    <div class="card">
-      <h2>Break-Even Calculator</h2>
-      <div class="grid">
-        <div>
-          <label for="finishWeight">Finished Weight (lb)</label>
-          <input id="finishWeight" type="number" placeholder="1350">
-        </div>
-        <div>
-          <label for="totalCost">Total Cost per Head ($)</label>
-          <input id="totalCost" type="number" step="0.01" placeholder="2340">
-        </div>
+      <div class="save-list" id="savedList">
+        <div class="muted">No scenarios saved yet.</div>
       </div>
+    </section>
 
-      <button onclick="breakeven()">Calculate Break Even</button>
-      <div class="result" id="breakResult">Enter your numbers and tap Calculate Break Even.</div>
-    </div>
+    <section id="subscribe" class="card subscription">
+      <div class="section-kicker">Ranch Mate Pro</div>
+      <h2>Subscription</h2>
+      <div class="price">$9<small>/month</small></div>
+      <p class="muted" style="color:rgba(255,255,255,.9);">
+        Use this section to sell premium access later. Replace the placeholder payment link with your real PayPal or Stripe link.
+      </p>
 
-    <div class="card sub-card">
-      <h2>Subscribe to Ranch Mate Pro</h2>
-      <div class="price">$9<span style="font-size:18px;">/month</span></div>
-      <p class="small">Unlock premium ranch tools as they are added.</p>
-
-      <ul>
-        <li>Break-even and cost-of-gain tools</li>
-        <li>Saved feed scenarios</li>
-        <li>Future premium market tools</li>
-        <li>More Ranch Mate features</li>
+      <ul class="sub-list">
+        <li>Premium market dashboards</li>
+        <li>More saved scenario tools</li>
+        <li>Future herd and calving features</li>
+        <li>Advanced feed and projection tools</li>
       </ul>
 
-      <a class="subscribe-btn" href="https://YOUR-SUBSCRIPTION-LINK-HERE.com" target="_blank">Subscribe Now</a>
-      <p class="small">Replace the button link with your real payment page later.</p>
-    </div>
+      <div class="btn-row">
+        <a class="button-link btn-primary" href="https://YOUR-PAYMENT-LINK-HERE.com" target="_blank" rel="noopener noreferrer">
+          Subscribe Now
+        </a>
+      </div>
 
-    <div class="footer-note">
-      Ranch Mate • Built for cattle producers
-    </div>
+      <div class="sub-note">
+        Replace <strong>https://YOUR-PAYMENT-LINK-HERE.com</strong> in the code with your real payment link.
+      </div>
+    </section>
 
+    <div class="footer">
+      Ranch Mate Pro • Built for cattle producers
+    </div>
   </div>
 
   <script>
-    function updateMarkets() {
-      document.getElementById("liveDisplay").innerText = "$" + (parseFloat(document.getElementById("live").value) || 0).toFixed(2);
-      document.getElementById("feederDisplay").innerText = "$" + (parseFloat(document.getElementById("feeder").value) || 0).toFixed(2);
-      document.getElementById("cornDisplay").innerText = "$" + (parseFloat(document.getElementById("corn").value) || 0).toFixed(2);
-      document.getElementById("hayDisplay").innerText = "$" + (parseFloat(document.getElementById("hay").value) || 0).toFixed(0);
+    let lastProfitTotalCost = null;
+
+    function formatMoney(value, decimals = 2) {
+      return "$" + Number(value).toFixed(decimals);
     }
 
-    function calculate() {
-      let cattle = parseFloat(document.getElementById("cattle").value) || 0;
-      let weight = parseFloat(document.getElementById("weight").value) || 0;
-      let intake = (parseFloat(document.getElementById("intake").value) || 0) / 100;
-      let price = parseFloat(document.getElementById("price").value) || 0;
+    function formatNumber(value, decimals = 0) {
+      return Number(value).toFixed(decimals);
+    }
+
+    function updateMarkets() {
+      const live = parseFloat(document.getElementById("live").value) || 0;
+      const feeder = parseFloat(document.getElementById("feeder").value) || 0;
+      const corn = parseFloat(document.getElementById("corn").value) || 0;
+      const hay = parseFloat(document.getElementById("hay").value) || 0;
+
+      document.getElementById("liveDisplay").innerText = formatMoney(live, 2);
+      document.getElementById("feederDisplay").innerText = formatMoney(feeder, 2);
+      document.getElementById("cornDisplay").innerText = formatMoney(corn, 2);
+      document.getElementById("hayDisplay").innerText = formatMoney(hay, 0);
+
+      document.getElementById("marketResult").innerHTML =
+        "Current market inputs loaded. " +
+        "<strong>Live:</strong> " + formatMoney(live) + " /lb • " +
+        "<strong>Feeder:</strong> " + formatMoney(feeder) + " /lb • " +
+        "<strong>Corn:</strong> " + formatMoney(corn) + " /bu • " +
+        "<strong>Hay:</strong> " + formatMoney(hay, 0) + " /ton";
+    }
+
+    function calculateFeed() {
+      const cattle = parseFloat(document.getElementById("cattle").value) || 0;
+      const weight = parseFloat(document.getElementById("weight").value) || 0;
+      const intake = (parseFloat(document.getElementById("intake").value) || 0) / 100;
+      const price = parseFloat(document.getElementById("price").value) || 0;
+      const daysFeed = parseFloat(document.getElementById("daysFeed").value) || 0;
 
       if (cattle <= 0 || weight <= 0 || intake <= 0 || price <= 0) {
-        document.getElementById("result").innerHTML = "Please enter valid numbers in all feed calculator fields.";
+        document.getElementById("feedResult").innerHTML =
+          "Please enter valid numbers for cattle count, weight, intake %, and feed price.";
         return;
       }
 
-      let feedPerHead = weight * intake;
-      let totalFeed = feedPerHead * cattle;
-      let pricePerLb = price / 2000;
-      let dailyCost = totalFeed * pricePerLb;
-      let monthlyCost = dailyCost * 30;
+      const feedPerHead = weight * intake;
+      const totalFeedPerDay = feedPerHead * cattle;
+      const pricePerLb = price / 2000;
+      const dailyCost = totalFeedPerDay * pricePerLb;
+      const monthlyCost = dailyCost * 30;
+      const totalPeriodCost = daysFeed > 0 ? dailyCost * daysFeed : 0;
 
-      document.getElementById("result").innerHTML =
-        "Feed per head: <strong>" + feedPerHead.toFixed(1) + " lb/day</strong><br>" +
-        "Total herd feed: <strong>" + totalFeed.toFixed(0) + " lb/day</strong><br>" +
-        "Daily cost: <strong>$" + dailyCost.toFixed(2) + "</strong><br>" +
-        "Monthly cost: <strong>$" + monthlyCost.toFixed(2) + "</strong>";
+      let html =
+        "<strong>Feed per head:</strong> " + formatNumber(feedPerHead, 1) + " lb/day<br>" +
+        "<strong>Total herd feed:</strong> " + formatNumber(totalFeedPerDay, 0) + " lb/day<br>" +
+        "<strong>Daily feed cost:</strong> " + formatMoney(dailyCost) + "<br>" +
+        "<strong>Monthly feed cost:</strong> " + formatMoney(monthlyCost);
+
+      if (daysFeed > 0) {
+        html += "<br><strong>Total feed cost for " + formatNumber(daysFeed, 0) + " days:</strong> " + formatMoney(totalPeriodCost);
+      }
+
+      document.getElementById("feedResult").innerHTML = html;
     }
 
-    function profitCalc() {
-      let buyWeight = parseFloat(document.getElementById("buyWeight").value) || 0;
-      let buyPrice = parseFloat(document.getElementById("buyPrice").value) || 0;
-      let sellWeight = parseFloat(document.getElementById("sellWeight").value) || 0;
-      let sellPrice = parseFloat(document.getElementById("sellPrice").value) || 0;
-      let feedDay = parseFloat(document.getElementById("feedDay").value) || 0;
-      let days = parseFloat(document.getElementById("days").value) || 0;
+    function calculateProfit() {
+      const buyWeight = parseFloat(document.getElementById("buyWeight").value) || 0;
+      const buyPrice = parseFloat(document.getElementById("buyPrice").value) || 0;
+      const sellWeight = parseFloat(document.getElementById("sellWeight").value) || 0;
+      const sellPrice = parseFloat(document.getElementById("sellPrice").value) || 0;
+      const feedDay = parseFloat(document.getElementById("feedDay").value) || 0;
+      const days = parseFloat(document.getElementById("days").value) || 0;
 
       if (buyWeight <= 0 || buyPrice <= 0 || sellWeight <= 0 || sellPrice <= 0 || feedDay < 0 || days < 0) {
-        document.getElementById("profitResult").innerHTML = "Please enter valid numbers in all profit calculator fields.";
+        document.getElementById("profitResult").innerHTML =
+          "Please enter valid numbers in all profit fields.";
         return;
       }
 
-      let purchaseCost = buyWeight * buyPrice;
-      let feedCost = feedDay * days;
-      let totalCost = purchaseCost + feedCost;
-      let saleValue = sellWeight * sellPrice;
-      let profit = saleValue - totalCost;
+      const purchaseCost = buyWeight * buyPrice;
+      const feedCost = feedDay * days;
+      const totalCost = purchaseCost + feedCost;
+      const saleValue = sellWeight * sellPrice;
+      const profit = saleValue - totalCost;
+      const gain = sellWeight - buyWeight;
+      const costPerLbGain = gain > 0 ? feedCost / gain : 0;
+
+      lastProfitTotalCost = totalCost;
 
       document.getElementById("profitResult").innerHTML =
-        "Purchase cost: <strong>$" + purchaseCost.toFixed(2) + "</strong><br>" +
-        "Feed cost: <strong>$" + feedCost.toFixed(2) + "</strong><br>" +
-        "Total cost: <strong>$" + totalCost.toFixed(2) + "</strong><br>" +
-        "Sale value: <strong>$" + saleValue.toFixed(2) + "</strong><br>" +
-        "Profit per head: <strong>$" + profit.toFixed(2) + "</strong>";
+        "<strong>Purchase cost:</strong> " + formatMoney(purchaseCost) + "<br>" +
+        "<strong>Feed cost:</strong> " + formatMoney(feedCost) + "<br>" +
+        "<strong>Total cost:</strong> " + formatMoney(totalCost) + "<br>" +
+        "<strong>Sale value:</strong> " + formatMoney(saleValue) + "<br>" +
+        "<strong>Projected profit per head:</strong> " + formatMoney(profit) + "<br>" +
+        "<strong>Total gain:</strong> " + formatNumber(gain, 0) + " lb<br>" +
+        "<strong>Feed cost per lb of gain:</strong> " + formatMoney(costPerLbGain);
     }
 
-    function breakeven() {
-      let finishWeight = parseFloat(document.getElementById("finishWeight").value) || 0;
-      let totalCost = parseFloat(document.getElementById("totalCost").value) || 0;
-
-      if (finishWeight <= 0 || totalCost <= 0) {
-        document.getElementById("breakResult").innerHTML = "Please enter a valid finished weight and total cost.";
+    function fillBreakEvenFromProfit() {
+      if (lastProfitTotalCost === null) {
+        document.getElementById("profitResult").innerHTML =
+          "Calculate profit first, then tap this button to send total cost to the break-even calculator.";
         return;
       }
 
-      let breakPrice = totalCost / finishWeight;
+      const sellWeight = parseFloat(document.getElementById("sellWeight").value) || 0;
 
-      document.getElementById("breakResult").innerHTML =
-        "Break-even price: <strong>$" + breakPrice.toFixed(2) + " per lb</strong>";
+      if (sellWeight > 0) {
+        document.getElementById("finishWeight").value = sellWeight;
+      }
+
+      document.getElementById("totalCost").value = lastProfitTotalCost.toFixed(2);
+      calculateBreakEven();
+      location.hash = "#breakeven";
+    }
+
+    function calculateBreakEven() {
+      const finishWeight = parseFloat(document.getElementById("finishWeight").value) || 0;
+      const totalCost = parseFloat(document.getElementById("totalCost").value) || 0;
+
+      if (finishWeight <= 0 || totalCost <= 0) {
+        document.getElementById("breakEvenResult").innerHTML =
+          "Please enter a valid finished weight and total cost.";
+        return;
+      }
+
+      const breakEven = totalCost / finishWeight;
+
+      document.getElementById("breakEvenResult").innerHTML =
+        "<strong>Break-even sale price:</strong> " + formatMoney(breakEven) + " per lb";
+    }
+
+    function calculateCostOfGain() {
+      const startingWeight = parseFloat(document.getElementById("startingWeight").value) || 0;
+      const endingWeight = parseFloat(document.getElementById("endingWeight").value) || 0;
+      const totalFeedCost = parseFloat(document.getElementById("totalFeedCost").value) || 0;
+      const otherCosts = parseFloat(document.getElementById("otherCosts").value) || 0;
+
+      if (startingWeight <= 0 || endingWeight <= 0 || endingWeight <= startingWeight) {
+        document.getElementById("costGainResult").innerHTML =
+          "Ending weight must be greater than starting weight.";
+        return;
+      }
+
+      const gain = endingWeight - startingWeight;
+      const totalCost = totalFeedCost + otherCosts;
+      const cog = totalCost / gain;
+
+      document.getElementById("costGainResult").innerHTML =
+        "<strong>Total gain:</strong> " + formatNumber(gain, 0) + " lb<br>" +
+        "<strong>Total included cost:</strong> " + formatMoney(totalCost) + "<br>" +
+        "<strong>Cost of gain:</strong> " + formatMoney(cog) + " per lb gained";
+    }
+
+    function getScenarioData() {
+      return {
+        id: Date.now(),
+        name: document.getElementById("scenarioName").value.trim() || "Untitled Scenario",
+        cattle: document.getElementById("cattle").value || "",
+        weight: document.getElementById("weight").value || "",
+        intake: document.getElementById("intake").value || "",
+        price: document.getElementById("price").value || "",
+        daysFeed: document.getElementById("daysFeed").value || "",
+        createdAt: new Date().toLocaleString()
+      };
+    }
+
+    function saveScenario() {
+      const cattle = parseFloat(document.getElementById("cattle").value) || 0;
+      const weight = parseFloat(document.getElementById("weight").value) || 0;
+      const intake = parseFloat(document.getElementById("intake").value) || 0;
+      const price = parseFloat(document.getElementById("price").value) || 0;
+
+      if (cattle <= 0 || weight <= 0 || intake <= 0 || price <= 0) {
+        document.getElementById("feedResult").innerHTML =
+          "Enter valid feed numbers before saving a scenario.";
+        return;
+      }
+
+      const scenario = getScenarioData();
+      const existing = JSON.parse(localStorage.getItem("ranchMateScenarios") || "[]");
+      existing.unshift(scenario);
+      localStorage.setItem("ranchMateScenarios", JSON.stringify(existing));
+      renderScenarios();
+
+      document.getElementById("feedResult").innerHTML =
+        "Scenario saved successfully as <strong>" + scenario.name + "</strong>.";
+    }
+
+    function renderScenarios() {
+      const container = document.getElementById("savedList");
+      const scenarios = JSON.parse(localStorage.getItem("ranchMateScenarios") || "[]");
+
+      if (!scenarios.length) {
+        container.innerHTML = '<div class="muted">No scenarios saved yet.</div>';
+        return;
+      }
+
+      container.innerHTML = scenarios.map(item => `
+        <div class="save-item">
+          <div class="save-head">
+            <div class="save-title">${escapeHtml(item.name)}</div>
+            <span class="pill">${escapeHtml(item.createdAt)}</span>
+          </div>
+          <div class="muted">
+            <strong>Cattle:</strong> ${escapeHtml(item.cattle)} •
+            <strong>Weight:</strong> ${escapeHtml(item.weight)} lb •
+            <strong>Intake:</strong> ${escapeHtml(item.intake)}% •
+            <strong>Feed Price:</strong> $${escapeHtml(item.price)}/ton •
+            <strong>Days:</strong> ${escapeHtml(item.daysFeed || "—")}
+          </div>
+          <div class="small-actions">
+            <button class="mini-btn" onclick="loadScenario(${item.id})">Load</button>
+            <button class="mini-btn" onclick="deleteScenario(${item.id})">Delete</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function loadScenario(id) {
+      const scenarios = JSON.parse(localStorage.getItem("ranchMateScenarios") || "[]");
+      const item = scenarios.find(x => x.id === id);
+      if (!item) return;
+
+      document.getElementById("scenarioName").value = item.name || "";
+      document.getElementById("cattle").value = item.cattle || "";
+      document.getElementById("weight").value = item.weight || "";
+      document.getElementById("intake").value = item.intake || "";
+      document.getElementById("price").value = item.price || "";
+      document.getElementById("daysFeed").value = item.daysFeed || "";
+
+      location.hash = "#feed";
+      calculateFeed();
+    }
+
+    function deleteScenario(id) {
+      const scenarios = JSON.parse(localStorage.getItem("ranchMateScenarios") || "[]");
+      const filtered = scenarios.filter(x => x.id !== id);
+      localStorage.setItem("ranchMateScenarios", JSON.stringify(filtered));
+      renderScenarios();
+    }
+
+    function clearScenarios() {
+      const confirmed = confirm("Delete all saved scenarios from this device?");
+      if (!confirmed) return;
+      localStorage.removeItem("ranchMateScenarios");
+      renderScenarios();
+    }
+
+    function exportScenarios() {
+      const scenarios = JSON.parse(localStorage.getItem("ranchMateScenarios") || "[]");
+
+      if (!scenarios.length) {
+        alert("No saved scenarios to export.");
+        return;
+      }
+
+      const blob = new Blob([JSON.stringify(scenarios, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ranch-mate-scenarios.json";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
     }
 
     updateMarkets();
+    renderScenarios();
   </script>
 </body>
 </html>
